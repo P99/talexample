@@ -6,7 +6,7 @@ module.exports = function(grunt) {
         jsbeautifier: {
             files: [
                 "static/script/appui/datasources/videofeed.js",
-                "static/script/appui/datasources/videoformatter.js",
+                "static/script/appui/formatters/videoformatter.js",
                 "Gruntfile.js"
             ],
         }

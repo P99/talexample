@@ -60,7 +60,7 @@ require.def("sampleapp/appui/components/carouselcomponent",
             },
 
             onSelect: function (evt) {
-                this._goBack();
+                this._playVideo(evt);
             },
 
             onDataBound: function (evt) {
@@ -187,8 +187,9 @@ require.def("sampleapp/appui/components/carouselcomponent",
                 this._carousel.getChildWidgets()[activeIndex].focus();
             },
 
-            _goBack: function () {
-                this.parentWidget.back();
+            _playVideo: function (evt) {
+                //this.parentWidget.back();
+                console.log("Playing video " + evt.target._dataItem);
             },
 
             /* possibly over cautious but should prevent memory leakage.
