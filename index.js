@@ -25,6 +25,7 @@
  */
 
 var express = require('express');
+var http = require('http');
 var app = express();
 var AntieFramework = require('tal');
 var mustacheExpress = require('mustache-express');
@@ -75,6 +76,10 @@ app.get('/', function (req, res) {
 app.use('/tal', express.static('node_modules/tal'));
 app.use('/static', express.static('static'));
 
-app.listen(1337, function () {
-  console.log('Example app listening on port 1337');
+var webServer = http.Server(app);
+webServer.listen(
+  process.env.OPENSHIFT_NODEJS_PORT || 8080,
+  process.env.OPENSHIFT_NODEJS_IP || '127.0.0.1',
+  function () {
+    console.log('Sample VOD app is running');
 });
