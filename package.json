@@ -25,5 +25,9 @@
     "tal": "fmtvp/tal",
     "express": "^4.13.4",
     "mustache-express": "^1.2.2"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-jsbeautifier": "^0.2.10"
   }
 }

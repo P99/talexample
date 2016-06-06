@@ -30,10 +30,10 @@ require.def("sampleapp/appui/components/simple",
         "antie/widgets/verticallist",
         "antie/widgets/carousel",
         "antie/datasource",
-        "sampleapp/appui/formatters/simpleformatter",
-        "sampleapp/appui/datasources/simplefeed"
+        "sampleapp/appui/formatters/videoformatter",
+        "sampleapp/appui/datasources/videofeed"
     ],
-    function (Component, Button, Label, VerticalList, Carousel, DataSource, SimpleFormatter, SimpleFeed) {
+    function (Component, Button, Label, VerticalList, Carousel, DataSource, VideoFormatter, VideoFeed) {
 
         // All components extend Component
         return Component.extend({
@@ -105,8 +105,8 @@ require.def("sampleapp/appui/components/simple",
             _getCarouselConfig: function () {
                 return {
                     description: "Carousel example, LEFT and RIGHT to navigate, SELECT to go back",
-                    dataSource: new DataSource(null, new SimpleFeed(), 'loadData'),
-                    formatter: new SimpleFormatter(),
+                    dataSource: new DataSource(null, new VideoFeed(), 'loadData'),
+                    formatter: new VideoFormatter(),
                     orientation: Carousel.orientations.HORIZONTAL,
                     carouselId: 'verticalCullingCarousel',
                     animOptions: {
