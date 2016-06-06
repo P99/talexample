@@ -38,25 +38,33 @@ require.def("sampleapp/appui/components/carouselcomponent",
                 this._addComponentListeners();
                 this._description = new Label();
                 this._description.addClass('description');
+                this._justInitialized = true;
                 this.appendChildWidget(this._description);
             },
 
             onBeforeShow: function (evt) {
-                this._initialItem = evt.args.initialItem || 0;
-                this._dontShowYet(evt);
-                this.setDescription(evt.args.description || "");
-                this._createCarousel(evt.args);
-                this.appendChildWidget(this._carousel);
-                this._addCarouselListeners();
-                this._setCarouselAlignPoints(evt);
-                this._saveCarouselLengths(evt);
-                this._startCarouselDataBinding(evt);
+                if (this._justInitialized) {
+                    this._initialItem = evt.args.initialItem || 0;
+                    this._dontShowYet(evt);
+                    this.setDescription(evt.args.description || "");
+                    this._createCarousel(evt.args);
+                    this.appendChildWidget(this._carousel);
+                    this._addCarouselListeners();
+                    this._setCarouselAlignPoints(evt);
+                    this._saveCarouselLengths(evt);
+                    this._startCarouselDataBinding(evt);
+                    this._justInitialized = false;
+                } else {
+                    console.log("FIXME - The carousel won't show a second time unless receiving a key event??");
+                }
             },
 
             onAfterHide: function (evt) {
+                /**
                 this._tearDownCarousel();
                 this.removeChildWidget(this._carousel);
                 this._carousel = null;
+                **/
             },
 
             onSelect: function (evt) {
