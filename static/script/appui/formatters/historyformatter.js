@@ -35,8 +35,9 @@ require.def("sampleapp/appui/formatters/historyformatter",
                 var button, item;
                 item = iterator.next();
                 button = new Button("fruit" + item.id);
-                button.appendChildWidget(new Image("img-item.id", item.img, { width : 200, height: 200}));
+                button.appendChildWidget(new Image("img-item.id", item.thumbnail, { width : 100, height: 100}));
                 button.appendChildWidget(new Label(item.title));
+                button.setDataItem(item);
                 return button;
             }
         });

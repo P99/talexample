@@ -24,48 +24,32 @@
 
 require.def("sampleapp/appui/datasources/historyfeed",
     [
-        "antie/class"
+        "antie/class",
+        "antie/runtimecontext"
     ],
-    function(Class) {
+    function(Class, RuntimeContext) {
         return Class.extend({
             // You will probably want to do something
             // more useful then returning static data.
             // An array of objects is expected.
-            loadData : function(callbacks) {
-                callbacks.onSuccess(
-                    [
-                        {
-                            "id":"1",
-                            "title":"Apple",
-                            "img" : "static/img/fruit/apple.png"
+            loadData: function(callbacks) {
+                            console.log("LOAD DATA");
+                var device = RuntimeContext.getDevice();
+                device.loadURL("static/mocks/history.json",
+                {
+                        onLoad: function(response) {
+                               console.log("History entries");
+                            var payload = JSON.parse(response);
+                            if (payload && payload.totalCount > 0) {
+                                callbacks.onSuccess(payload.entries);
+                            } else {
+                               callbacks.onError("No entries...");
+                            }
                         },
-                        {
-                            "id":"2",
-                            "title":"Banana",
-                            "img" : "static/img/fruit/banana.png"
-                        },
-                        {
-                            "id":"3",
-                            "title":"Grapes",
-                            "img" : "static/img/fruit/grapes.png"
-                        },
-                        {
-                            "id":"4",
-                            "title":"Orange",
-                            "img" : "static/img/fruit/orange.png"
-                        },
-                        {
-                            "id":"5",
-                            "title":"Peach",
-                            "img" : "static/img/fruit/peach.png"
-                        },
-                        {
-                            "id":"6",
-                            "title":"Pear",
-                            "img" : "static/img/fruit/pear.png"
+                        onError: function(response) {
+                            callbacks.onError(response);
                         }
-                    ]
-                );
+                });
             }
         });
     });

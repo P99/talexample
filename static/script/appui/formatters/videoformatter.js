@@ -18,7 +18,11 @@ require.def("sampleapp/appui/formatters/videoformatter", [
                     height: thumbnail.height
                 }));
                 button.appendChildWidget(new Label(item.title));
-                button.setDataItem(item.contents[0].url);
+                button.setDataItem({
+                    title: item.title,
+                    thumbnail: thumbnail.url,
+                    url: item.contents[0].url
+                });
                 return button;
             }
         });

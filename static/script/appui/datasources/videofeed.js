@@ -13,10 +13,13 @@ require.def("sampleapp/appui/datasources/videofeed", [
                 {
                         onLoad: function(response) {
                             var payload = JSON.parse(response);
-                            callbacks.onSuccess(payload.entries);
+                            if (payload && payload.totalCount > 0) {
+                                callbacks.onSuccess(payload.entries);
+                            } else {
+                               callbacks.onError("No entries...");
+                            }
                         },
                         onError: function(response) {
-                               console.log("Failure");
                             callbacks.onError(response);
                         }
                 });

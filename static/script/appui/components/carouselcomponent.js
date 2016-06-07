@@ -198,7 +198,7 @@ require.def("sampleapp/appui/components/carouselcomponent",
             },
 
             _playVideo: function (evt) {
-                this.getCurrentApplication().pushComponent("maincontainer", "sampleapp/appui/components/simplevideocomponent", evt.target._dataItem);
+                this.getCurrentApplication().pushComponent("maincontainer", "sampleapp/appui/components/simplevideocomponent", evt.target._dataItem.url);
             },
 
             /* possibly over cautious but should prevent memory leakage.
