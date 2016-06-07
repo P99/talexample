@@ -1,27 +1,25 @@
 require.def("sampleapp/appui/datasources/videofeed", [
-        "antie/class"
+        "antie/class",
+        "antie/runtimecontext"
     ],
-    function(Class) {
+    function(Class, RuntimeContext) {
         return Class.extend({
             // You will probably want to do something
             // more useful then returning static data.
             // An array of objects is expected.
             loadData: function(callbacks) {
-
-                var xhr = new XMLHttpRequest();
-                xhr.onreadystatechange = function() {
-                    if (xhr.readyState == 4) {
-                        if (xhr.status == 200) {
-                            var payload = JSON.parse(xhr.responseText);
-                            console.log("Received video data (%d items)", payload.totalCount);
+                var device = RuntimeContext.getDevice();
+                device.loadURL("static/mocks/movies.json",
+                {
+                        onLoad: function(response) {
+                            var payload = JSON.parse(response);
                             callbacks.onSuccess(payload.entries);
-                        } else {
-                            callbacks.onError(xhr.statusText);
+                        },
+                        onError: function(response) {
+                               console.log("Failure");
+                            callbacks.onError(response);
                         }
-                    }
-                };
-                xhr.open("GET", "https://demo2697834.mockable.io/movies", true);
-                xhr.send();
+                });
             }
         });
     });
