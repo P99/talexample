@@ -141,6 +141,12 @@ require.def("sampleapp/appui/components/simplevideocomponent",
                     self._player.play();
                 });
 
+                // Destroy player and return to previous screen when video is finished
+                this._player.addEventListener('ended', function(evt) {
+                    self.destroyPlayer();
+                    self.parentWidget.back();
+                });
+
                 // Return a reference to the player object so we can set and load the media source
                 return this._player;
             },
