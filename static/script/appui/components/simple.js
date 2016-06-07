@@ -27,50 +27,46 @@ require.def("sampleapp/appui/components/simple",
         "antie/widgets/component",
         "antie/widgets/button",
         "antie/widgets/label",
+        "antie/widgets/horizontallist",
         "antie/widgets/verticallist",
         "antie/widgets/carousel",
         "antie/datasource",
         "sampleapp/appui/formatters/videoformatter",
-        "sampleapp/appui/datasources/videofeed"
+        "sampleapp/appui/datasources/videofeed",
+        "sampleapp/appui/formatters/historyformatter",
+        "sampleapp/appui/datasources/historyfeed",
+        "antie/widgets/componentcontainer"
     ],
-    function (Component, Button, Label, VerticalList, Carousel, DataSource, VideoFormatter, VideoFeed) {
+    function (Component, Button, Label, HorizontalList, VerticalList, Carousel, DataSource, VideoFormatter, VideoFeed, HistoryFormatter, HistoryFeed, ComponentContainer) {
 
         // All components extend Component
         return Component.extend({
             init: function () {
-                var self, helloWorldLabel, welcomeLabel, carouselButtonLabel, verticalListMenu;
+                var self, layout, menu, carousel;
 
                 self = this;
                 // It is important to call the constructor of the superclass
                 this._super("simplecomponent");
 
-                // Add the labels to the component
-                helloWorldLabel = new Label("helloWorldLabel", "Hello World");
-                this.appendChildWidget(helloWorldLabel);
-
-                welcomeLabel = new Label("welcomeLabel", "Welcome to your first TAL application!");
-                this.appendChildWidget(welcomeLabel);
-
-                var newCarouselButton = this._createCarouselButton();
-
-                var playerButton = new Button();
-                playerButton.addEventListener("select", function(evt){
-                    self.getCurrentApplication().pushComponent("maincontainer", "sampleapp/appui/components/simplevideocomponent");
-                });
-                playerButton.appendChildWidget(new Label("Simple Video Player Example"));
-
-                var horizontalProgressButton = new Button();
-                horizontalProgressButton.appendChildWidget(new Label("Horizontal Progress Bar Example"));
-                horizontalProgressButton.addEventListener("select", function(evt) {
-                    self.getCurrentApplication().pushComponent("maincontainer", "sampleapp/appui/components/horizontalprogresscomponent");
-                });
-
                 // Create a vertical list and append the buttons to navigate within the list
-                verticalListMenu = new VerticalList("mainMenuList");
-                verticalListMenu.appendChildWidget(newCarouselButton);
-                verticalListMenu.appendChildWidget(playerButton);
-                verticalListMenu.appendChildWidget(horizontalProgressButton);
-                this.appendChildWidget(verticalListMenu);
+                layout = new VerticalList("mainLayout");
+                menu = new HorizontalList("mainMenuList");
+                carousel = new ComponentContainer("carousel");
+
+                var videoButton = this._createVideoCarouselButton(function () {
+                    carousel.show("sampleapp/appui/components/carouselcomponent", self._getVideoCarouselConfig());
+
+                });
+                var historyButton = this._createHistoryCarouselButton(function carouselHistorySelected() {
+                    carousel.show("sampleapp/appui/components/carouselcomponent", self._getHistoryCarouselConfig());
+                });
+
+                menu.appendChildWidget(videoButton);
+                menu.appendChildWidget(historyButton);
+
+                layout.appendChildWidget(menu);
+                layout.appendChildWidget(carousel);
+                this.appendChildWidget(layout);
 
                 // Add a 'beforerender' event listener to the component to do anything specific that might need to be done
                 // before rendering the component
@@ -83,26 +79,23 @@ require.def("sampleapp/appui/components/simple",
                 this.addEventListener("aftershow", function appReady(evt) {
                     self.getCurrentApplication().ready();
                     self.removeEventListener('aftershow', appReady);
+                    carousel.show("sampleapp/appui/components/carouselcomponent", self._getVideoCarouselConfig());
+                });
+
+                this.addEventListener("beforeshow", function (evt) {
+                    var widget = carousel.getActiveChildWidget();
+                    widget.update();
                 });
             },
 
-            _createCarouselButton: function () {
-                var self = this;
-                function carouselExampleSelected() {
-                    self.getCurrentApplication().pushComponent(
-                        "maincontainer",
-                        "sampleapp/appui/components/carouselcomponent",
-                        self._getCarouselConfig()
-                    );
-                }
-
-                var button = new Button('carouselButton');
-                button.appendChildWidget(new Label("Carousel Example"));
-                button.addEventListener('select', carouselExampleSelected);
+            _createVideoCarouselButton: function (selectCallback) {
+                var button = new Button('videoButton');
+                button.appendChildWidget(new Label("Videos"));
+                button.addEventListener('select', selectCallback);
                 return button;
             },
 
-            _getCarouselConfig: function () {
+            _getVideoCarouselConfig: function () {
                 return {
                     description: "Carousel example, LEFT and RIGHT to navigate, SELECT to go back",
                     dataSource: new DataSource(null, new VideoFeed(), 'loadData'),
@@ -116,7 +109,32 @@ require.def("sampleapp/appui/components/simple",
                         normalisedAlignPoint: 0.5,
                         normalisedWidgetAlignPoint: 0.5
                     },
-                    initialItem: 4,
+                    type: "CULLING",
+                    lengths: 264
+                };
+            },
+
+            _createHistoryCarouselButton: function (selectCallback) {
+                var button = new Button('historyButton');
+                button.appendChildWidget(new Label("History"));
+                button.addEventListener('select', selectCallback);
+                return button;
+            },
+
+            _getHistoryCarouselConfig: function () {
+                return {
+                    description: "Carousel example, LEFT and RIGHT to navigate, SELECT to go back",
+                    dataSource: new DataSource(null, new HistoryFeed(), 'loadData'),
+                    formatter: new HistoryFormatter(),
+                    orientation: Carousel.orientations.VERTICAL,
+                    carouselId: 'verticalCullingCarousel',
+                    animOptions: {
+                        skipAnim: false
+                    },
+                    alignment: {
+                        normalisedAlignPoint: 0.5,
+                        normalisedWidgetAlignPoint: 0.5
+                    },
                     type: "CULLING",
                     lengths: 264
                 };
