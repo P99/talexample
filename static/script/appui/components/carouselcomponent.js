@@ -42,33 +42,31 @@ require.def("sampleapp/appui/components/carouselcomponent",
             },
 
             onBeforeShow: function (evt) {
-
-                if (!evt.state) {
-                    this._initialItem = evt.args.initialItem || 0;
-                    this._dontShowYet(evt);
-                    this.setDescription(evt.args.description || "");
-                    this._createCarousel(evt.args);
-                    this.appendChildWidget(this._carousel);
-                    this._addCarouselListeners();
-                    this._setCarouselAlignPoints(evt);
-                    this._saveCarouselLengths(evt);
-                    this._startCarouselDataBinding(evt);
-                    this._justInitialized = false;
-                } else {
-                    this._carousel.alignToIndex(evt.state);
-                }
+                this._initialItem = evt.args.initialItem || 0;
+                this._dontShowYet(evt);
+                this.setDescription(evt.args.description || "");
+                this._createCarousel(evt.args);
+                this.appendChildWidget(this._carousel);
+                this._addCarouselListeners();
+                this._setCarouselAlignPoints(evt);
+                this._saveCarouselLengths(evt);
+                this._startCarouselDataBinding(evt);
+                this._justInitialized = false;
             },
 
             onAfterHide: function (evt) {
-                /**
                 this._tearDownCarousel();
                 this.removeChildWidget(this._carousel);
                 this._carousel = null;
-                **/
             },
 
             getCurrentState: function() {
                 return this._carousel.getActiveChildIndex();
+            },
+
+            update: function() {
+                // Hack to force redisplay when back from previous screen
+                this._carousel.alignToIndex(this.getCurrentState());
             },
 
             onSelect: function (evt) {
