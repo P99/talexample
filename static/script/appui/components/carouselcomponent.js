@@ -38,12 +38,12 @@ require.def("sampleapp/appui/components/carouselcomponent",
                 this._addComponentListeners();
                 this._description = new Label();
                 this._description.addClass('description');
-                this._justInitialized = true;
                 this.appendChildWidget(this._description);
             },
 
             onBeforeShow: function (evt) {
-                if (this._justInitialized) {
+
+                if (!evt.state) {
                     this._initialItem = evt.args.initialItem || 0;
                     this._dontShowYet(evt);
                     this.setDescription(evt.args.description || "");
@@ -55,7 +55,7 @@ require.def("sampleapp/appui/components/carouselcomponent",
                     this._startCarouselDataBinding(evt);
                     this._justInitialized = false;
                 } else {
-                    console.log("FIXME - The carousel won't show a second time unless receiving a key event??");
+                    this._carousel.alignToIndex(evt.state);
                 }
             },
 
@@ -65,6 +65,10 @@ require.def("sampleapp/appui/components/carouselcomponent",
                 this.removeChildWidget(this._carousel);
                 this._carousel = null;
                 **/
+            },
+
+            getCurrentState: function() {
+                return this._carousel.getActiveChildIndex();
             },
 
             onSelect: function (evt) {
