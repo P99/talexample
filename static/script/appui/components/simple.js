@@ -97,7 +97,7 @@ require.def("sampleapp/appui/components/simple",
 
             _getVideoCarouselConfig: function () {
                 return {
-                    description: "Videos carousel, LEFT and RIGHT to navigate, SELECT to play the movie",
+                    description: "",
                     dataSource: new DataSource(null, new VideoFeed(), 'loadData'),
                     formatter: new VideoFormatter(),
                     orientation: Carousel.orientations.HORIZONTAL,
@@ -123,7 +123,7 @@ require.def("sampleapp/appui/components/simple",
 
             _getHistoryCarouselConfig: function () {
                 return {
-                    description: "History items, Up and DOWN to navigate, SELECT for playback",
+                    description: "",
                     dataSource: new DataSource(null, new HistoryFeed(), 'loadData'),
                     formatter: new HistoryFormatter(),
                     orientation: Carousel.orientations.VERTICAL,

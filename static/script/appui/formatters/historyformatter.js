@@ -27,18 +27,50 @@ require.def("sampleapp/appui/formatters/historyformatter",
         "antie/formatter",
         "antie/widgets/label",
         "antie/widgets/button",
-        "antie/widgets/image"
+        "antie/widgets/image",
+        "antie/widgets/horizontallist",
+        "antie/widgets/verticallist",
     ],
-    function(Formatter, Label, Button, Image) {
+    function(Formatter, Label, Button, Image, HorizontalList, verticallist) {
         return Formatter.extend({
             format : function (iterator) {
-                var button, item;
+                var button, hlist, vlist, item;
                 item = iterator.next();
-                button = new Button("fruit" + item.id);
-                button.appendChildWidget(new Image("img-item.id", item.thumbnail, { width : 100, height: 100}));
-                button.appendChildWidget(new Label(item.title));
+                button = new Button("history" + item.id);
+                hlist = new HorizontalList("hbox");
+                vlist = new verticallist("vbox");
+                button.appendChildWidget(hlist);
+                hlist.appendChildWidget(new Image("img-item.id", item.thumbnail, { width : 48, height: 70}));
+                hlist.appendChildWidget(vlist);
+                vlist.appendChildWidget(new Label(this._formatDate(item.date)));
+                vlist.appendChildWidget(new Label("(" + this._formatDuration(item.elapsed) + ")"));
+                vlist.appendChildWidget(new Label(item.title));
                 button.setDataItem(item);
                 return button;
+            },
+
+            _formatDate: function (date) {
+                var local = new Date(date);
+                var offset = new Date(date);
+                local.setMinutes(offset.getMinutes() - offset.getTimezoneOffset());
+                return local.toString().slice(0, -19);
+            },
+
+            _formatDuration: function (duration) {
+                var str = "", hrs, mins, secs;
+                hrs = ~~(duration / 3600);
+                mins = ~~((duration % 3600) / 60);
+                secs = duration % 60;
+                if (hrs > 0) {
+                    str += hrs + (hrs > 1 ? " hours, " : " hour, ");
+                }
+                if (mins > 0) {
+                    str += mins + (mins > 1 ? " minutes, " : " minute, ");
+                }
+                if (secs > 0) {
+                    str += secs + (secs > 1 ? " seconds" : " second")
+                }
+                return str;
             }
         });
     }

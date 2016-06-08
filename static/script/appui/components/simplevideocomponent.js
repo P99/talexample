@@ -47,9 +47,9 @@ require.def("sampleapp/appui/components/simplevideocomponent",
                 this._device = this._application.getDevice();
 
                 // Create a a label add a class to it, this class can be used as a CSS selector
-                var description = new Label("Simple Video Component.");
-                description.addClass("description");
-                this.appendChildWidget(description);
+                // var description = new Label("Simple Video Component.");
+                // description.addClass("description");
+                // this.appendChildWidget(description);
 
                 // Create a horizontal list that contains buttons to control the video
                 var playerControlButtons = new HorizontalList("playerButtons");
