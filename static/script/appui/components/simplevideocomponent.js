@@ -54,21 +54,24 @@ require.def("sampleapp/appui/components/simplevideocomponent",
                 var playerControlButtons = new HorizontalList("playerButtons");
 
                 var play = new Button('play');
-                play.appendChildWidget(new Label('PLAY'));
+                //play.appendChildWidget(new Label('PLAY'));
+                play.addClass("fa fa-play");
                 playerControlButtons.appendChildWidget(play);
                 play.addEventListener('select', function(evt) {
                     self.getPlayer().play();
                 });
 
                 var pause = new Button('pause');
-                pause.appendChildWidget(new Label('PAUSE'));
+                //pause.appendChildWidget(new Label('PAUSE'));
+                pause.addClass("fa fa-pause");
                 playerControlButtons.appendChildWidget(pause);
                 pause.addEventListener('select', function(evt) {
                     self.getPlayer().pause();
                 });
 
 		var rewind = new Button('rewind');
-                rewind.appendChildWidget(new Label('-5s'));
+                //rewind.appendChildWidget(new Label('-5s'));
+                rewind.addClass("fa fa-backward");
                 playerControlButtons.appendChildWidget(rewind);
                 rewind.addEventListener('select', function(evt) {
 		  var currentTime = self.getPlayer().getCurrentTime();
@@ -76,7 +79,8 @@ require.def("sampleapp/appui/components/simplevideocomponent",
                 });
 
 	        var fastForward = new Button('fastForward');
-                fastForward.appendChildWidget(new Label('+5s'));
+                //fastForward.appendChildWidget(new Label('+5s'));
+                fastForward.addClass("fa fa-forward");
 		  playerControlButtons.appendChildWidget(fastForward);
 		  fastForward.addEventListener('select', function(evt) {
 		    var currentTime = self.getPlayer().getCurrentTime();
@@ -84,7 +88,8 @@ require.def("sampleapp/appui/components/simplevideocomponent",
                 });
 
                 var back = new Button('back');
-                back.appendChildWidget(new Label('BACK'));
+                //back.appendChildWidget(new Label('BACK'));
+                back.addClass("fa fa-stop");
                 playerControlButtons.appendChildWidget(back);
                 back.addEventListener('select', function(evt) {
                     if (self._device.getPlayerEmbedMode() === Media.EMBED_MODE_BACKGROUND) {
