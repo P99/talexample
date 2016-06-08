@@ -7,21 +7,18 @@ require.def("sampleapp/appui/formatters/videoformatter", [
     function(Formatter, Label, Button, Image) {
         return Formatter.extend({
             format: function(iterator) {
-                var button, item, thumbnail;
+                var button, item;
                 item = iterator.next();
-                thumbnail = item.images[0];
-                button = new Button("video" + item.id);
-                thumbnail.url += (thumbnail.url.indexOf("?") >= 0) ? "&id=" : "?id=";
-                thumbnail.url += thumbnail.id;
-                button.appendChildWidget(new Image("img-item.id", thumbnail.url, {
-                    width: thumbnail.width,
-                    height: thumbnail.height
+                button = new Button("video" + item.idIMDB);
+                button.appendChildWidget(new Image("img-item.id", item.urlPoster, {
+                    width: 182,
+                    height: 268
                 }));
                 button.appendChildWidget(new Label(item.title));
                 button.setDataItem({
                     title: item.title,
-                    thumbnail: thumbnail.url,
-                    url: item.contents[0].url
+                    thumbnail: item.urlPoster,
+                    url: item.videoUrl
                 });
                 return button;
             }
