@@ -29,9 +29,10 @@ require.def("sampleapp/appui/components/simplevideocomponent",
         "antie/widgets/label",
         "antie/widgets/horizontallist",
         "antie/videosource",
-        "antie/widgets/media"
+        "antie/widgets/media",
+        "antie/widgets/horizontalprogress"
     ],
-    function (Component, Button, Label, HorizontalList, VideoSource, Media) {
+    function (Component, Button, Label, HorizontalList, VideoSource, Media, HorizontalProgress) {
 
         // All components extend Component
         return Component.extend({
@@ -52,6 +53,9 @@ require.def("sampleapp/appui/components/simplevideocomponent",
 
                 // Create a horizontal list that contains buttons to control the video
                 var playerControlButtons = new HorizontalList("playerButtons");
+
+                this._progress = new HorizontalProgress("progressBar", true, 0);
+                playerControlButtons.appendChildWidget(this._progress);
 
                 var play = new Button('play');
                 //play.appendChildWidget(new Label('PLAY'));
@@ -150,6 +154,11 @@ require.def("sampleapp/appui/components/simplevideocomponent",
                 this._player.addEventListener('ended', function(evt) {
                     self.destroyPlayer();
                     self.parentWidget.back();
+                });
+
+                this._player.addEventListener("timeupdate", function(evt) {
+                    var video = evt.target.outputElement;
+                    self._progress.setValue(video.currentTime / video.duration);
                 });
 
                 // Return a reference to the player object so we can set and load the media source
