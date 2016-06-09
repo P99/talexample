@@ -147,6 +147,11 @@ require.def("sampleapp/appui/components/simplevideocomponent",
                 this._player = new Media('testPlayer', 'video');
                 this.appendChildWidget(this._player);
 
+                // Will start playing from saved elpased time if available
+                if (this._dataItem.elapsed) {
+                    this._player._mediaInterface._mediaElement.currentTime = this._dataItem.elapsed;
+                }
+
                 // Start playing the video as soon as the device fires an antie 'canplay' event
                 this._player.addEventListener('canplay', function(evt) {
                     // Some devices have the player in the background behind the HTML page, we need to ensure the
