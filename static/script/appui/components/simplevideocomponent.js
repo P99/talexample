@@ -30,9 +30,11 @@ require.def("sampleapp/appui/components/simplevideocomponent",
         "antie/widgets/horizontallist",
         "antie/videosource",
         "antie/widgets/media",
-        "antie/widgets/horizontalprogress"
+        "antie/widgets/horizontalprogress",
+        "antie/runtimecontext",
+        "antie/storageprovider"
     ],
-    function (Component, Button, Label, HorizontalList, VideoSource, Media, HorizontalProgress) {
+    function (Component, Button, Label, HorizontalList, VideoSource, Media, HorizontalProgress, RuntimeContext, StorageProvider) {
 
         // All components extend Component
         return Component.extend({
@@ -112,21 +114,28 @@ require.def("sampleapp/appui/components/simplevideocomponent",
                 this.addEventListener("beforerender", function (evt) {
                     self._onBeforeRender(evt);
                 });
+
+                // Assign a userID and save in persistent storage
+                this._setUserId();
             },
 
             _onBeforeRender: function (evt) {
                 // Create a video player
                 var videoType = "video/mp4";
+                this._dataItem = evt.args;
 
                 // Create the device's video object, set the media sources and start loading the media
                 var player = this.createVideoPlayer();
-                player.setSources([new VideoSource(evt.args, videoType)]);
+                player.setSources([new VideoSource(evt.args.url, videoType)]);
                 player.load();
             },
             getPlayer : function() {
                 return this._player;
             },
             destroyPlayer : function() {
+                // Updated history with elapsed time
+                this._dataItem.elapsed = this._player.outputElement.currentTime;
+                this._updateHistory();
                 this._player.destroy();
                 this.removeChildWidget(this._player);
                 this._player = null;
@@ -156,10 +165,13 @@ require.def("sampleapp/appui/components/simplevideocomponent",
                     self.parentWidget.back();
                 });
 
-                this._player.addEventListener("timeupdate", function(evt) {
+                this._player.addEventListener('timeupdate', function(evt) {
                     var video = evt.target.outputElement;
                     self._progress.setValue(video.currentTime / video.duration);
                 });
+
+                // Create history entry - To be updated with elapsed time
+                this._saveHistory();
 
                 // Return a reference to the player object so we can set and load the media source
                 return this._player;
@@ -172,6 +184,34 @@ require.def("sampleapp/appui/components/simplevideocomponent",
                 if (this._device.getPlayerEmbedMode() === Media.EMBED_MODE_BACKGROUND) {
                     this._device.removeClassFromElement(document.body, 'background-none');
                     this._application.getRootWidget().removeClass('background-none');
+                }
+            },
+            _saveHistory: function () {
+                var device = RuntimeContext.getDevice();
+                this._dataItem.date = new Date().getTime();
+                device.loadURL("api/history/new", {
+                    'method': "PUT",
+                    'headers': {'Content-Type': "application/json;charset=UTF-8"},
+                    'data': JSON.stringify(this._dataItem)
+                });
+            },
+            _updateHistory: function () {
+                var device = RuntimeContext.getDevice();
+                this._dataItem.date = new Date().getTime();
+                device.loadURL("api/history/" + this._dataItem.id, {
+                    'method': "POST",
+                    'headers': {'Content-Type': "application/json;charset=UTF-8"},
+                    'data': JSON.stringify(this._dataItem)
+                });
+            },
+            _setUserId: function () {
+                var device, storage, userId;
+                var device = RuntimeContext.getDevice();
+                storage = device.getStorage(StorageProvider.STORAGE_TYPE_PERSISTENT, "accedo");
+                userId = storage.getItem("userId");
+                if (!userId) {
+                    userId = Math.random().toString(36).substr(2);
+                    storage.setItem("userId", userId);
                 }
             }
         });

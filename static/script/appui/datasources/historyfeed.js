@@ -35,10 +35,9 @@ require.def("sampleapp/appui/datasources/historyfeed",
             loadData: function(callbacks) {
                             console.log("LOAD DATA");
                 var device = RuntimeContext.getDevice();
-                device.loadURL("static/mocks/history.json",
+                device.loadURL("api/history/all",
                 {
                         onLoad: function(response) {
-                               console.log("History entries");
                             var payload = JSON.parse(response);
                             if (payload && payload.totalCount > 0) {
                                 callbacks.onSuccess(payload.entries);

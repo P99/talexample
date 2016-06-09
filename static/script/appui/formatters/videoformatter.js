@@ -16,6 +16,7 @@ require.def("sampleapp/appui/formatters/videoformatter", [
                 }));
                 button.appendChildWidget(new Label(item.title));
                 button.setDataItem({
+                    id: item.idIMDB,
                     title: item.title,
                     thumbnail: item.urlPoster,
                     url: item.videoUrl
