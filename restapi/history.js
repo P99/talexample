@@ -6,7 +6,6 @@ var bodyParser = require('body-parser');
 var url = process.env.OPENSHIFT_MONGODB_DB_URL || 'mongodb://ca693a8ccfa2cd3464d532afdfab31c5:bf7863d7a446ecb58603a177c5eeed3b@ds011314.mlab.com:11314/accedo';
 
 module.exports = function (app) {
-    // Use connect method to connect to the server
     MongoClient.connect(url, function(err, db) {
         if (!err) {
             console.log("Connected succesfully to server");
@@ -14,23 +13,41 @@ module.exports = function (app) {
             registerHistoryHandler(app, db);
         }
     });
-    
-
 }
 
 function registerHistoryHandler(app, db) {
     app.all('/api/history/*', function (req, res) {
-        console.log("Received REST request: " + req.path + " method: " + req.method);
-        res.send('hello world');
-        
-        var keyword = req.path.slice(13); // trim '/api/history/'
-        console.log("url: " + keyword);
 
-        if ((keyword == "new") && (req.method == "POST")) {
-            // Insert new history item into database
-            var history = db.collection('history');
-            console.log("JSON: " + JSON.stringify(req.body));
-            //history.insert(req.body);
+        function resolve(err, result) {
+            res.send({"status": (err ? "failure" : "success")});
+        }
+        
+        var history = db.collection('history');
+        var keyword = req.path.slice(13); // trim '/api/history/'
+
+        if ((keyword == "new") && (req.method == "PUT")) {
+            // Create
+            history.updateOne({"id": req.body.id}, {$set: req.body}, {upsert: true}, resolve);
+        } else if ((keyword == "all") && (req.method == "GET")) {
+            // Read
+            history.find({}).toArray(function(err, docs) {
+                if (!err) {
+                    res.send({"status": "success",
+                        "totalCount": docs.length,
+                        "entries": docs
+                    });
+                } else {
+                    res.send({"status": "failure"});
+                }
+            });
+        } else if (keyword && (req.method == "POST")) {
+            // Update
+            history.updateOne({"id": keyword}, {$set: req.body}, resolve);
+        } else if (keyword && (req.method == "DELETE")) {
+            // Delete
+            history.deleteOne({"id": keyword}, resolve);
+        } else {
+            res.send({"status": "failure"});
         }
     });
 }
