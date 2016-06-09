@@ -30,7 +30,7 @@ function registerHistoryHandler(app, db) {
             history.updateOne({"id": req.body.id}, {$set: req.body}, {upsert: true}, resolve);
         } else if ((keyword == "all") && (req.method == "GET")) {
             // Read
-            history.find({}).toArray(function(err, docs) {
+            history.find({}, {_id: 0}).toArray(function(err, docs) {
                 if (!err) {
                     res.send({"status": "success",
                         "totalCount": docs.length,
