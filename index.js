@@ -29,6 +29,7 @@ var http = require('http');
 var app = express();
 var AntieFramework = require('tal');
 var mustacheExpress = require('mustache-express');
+var restapi = require('./restapi/history');
 
 // Setup mustache for view templating
 app.engine('mustache', mustacheExpress());
@@ -75,6 +76,9 @@ app.get('/', function (req, res) {
 
 app.use('/tal', express.static('node_modules/tal'));
 app.use('/static', express.static('static'));
+
+// Enable REST API to handle history items
+restapi(app);
 
 var webServer = http.Server(app);
 webServer.listen(
