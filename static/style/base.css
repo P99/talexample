@@ -270,6 +270,10 @@ initial element background in the base stylesheet, not in dynamically loaded sty
     height: 70px;
 }
 
+.verticallist.listitem {
+    width: 100%;
+}
+
 .carouselwidgetstrip.horizontal span.widget.label {
     float: left;
     width: 180px;
