@@ -66,7 +66,10 @@ require.def("sampleapp/appui/components/carouselcomponent",
 
             update: function() {
                 // Hack to force redisplay when back from previous screen
-                this._carousel.alignToIndex(this.getCurrentState());
+                var index = this.getCurrentState();
+                if (index !== null) {
+                    this._carousel.alignToIndex(index);
+                }
             },
 
             onSelect: function (evt) {

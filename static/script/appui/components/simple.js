@@ -109,7 +109,7 @@ require.def("sampleapp/appui/components/simple",
                         normalisedAlignPoint: 0.5,
                         normalisedWidgetAlignPoint: 0.5
                     },
-                    type: "CULLING",
+                    type: "WRAPPING",
                     lengths: 264
                 };
             },
@@ -129,11 +129,11 @@ require.def("sampleapp/appui/components/simple",
                     orientation: Carousel.orientations.VERTICAL,
                     carouselId: 'verticalCullingCarousel',
                     animOptions: {
-                        skipAnim: false
+                        skipAnim: true
                     },
                     alignment: {
-                        normalisedAlignPoint: 0.5,
-                        normalisedWidgetAlignPoint: 0.5
+                        normalisedAlignPoint: -0.5,
+                        normalisedWidgetAlignPoint: -0.5
                     },
                     type: "CULLING",
                     lengths: 264

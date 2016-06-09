@@ -33,7 +33,6 @@ require.def("sampleapp/appui/datasources/historyfeed",
             // more useful then returning static data.
             // An array of objects is expected.
             loadData: function(callbacks) {
-                            console.log("LOAD DATA");
                 var device = RuntimeContext.getDevice();
                 device.loadURL("api/history/all",
                 {
