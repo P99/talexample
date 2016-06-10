@@ -22,7 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def("sampleapp/appui/components/simple",
+require.def("sampleapp/appui/components/vodview",
     [
         "antie/widgets/component",
         "antie/widgets/button",

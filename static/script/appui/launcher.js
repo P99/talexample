@@ -22,7 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def('sampleapp/appui/sampleapp',
+require.def('sampleapp/appui/launcher',
     [
         'antie/application',
         'antie/widgets/container'
@@ -49,7 +49,7 @@ require.def('sampleapp/appui/sampleapp',
                 // Called from run() as we need the framework to be ready beforehand.
                 this._setRootContainer();
                 // Create maincontainer and add simple component to it
-                this.addComponentContainer("maincontainer", "sampleapp/appui/components/simple");
+                this.addComponentContainer("maincontainer", "sampleapp/appui/components/vodview");
             }
         });
     }
