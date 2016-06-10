@@ -75,6 +75,7 @@ app.get('/', function (req, res) {
 });
 
 app.use('/tal', express.static('node_modules/tal'));
+app.use('/utility', express.static('node_modules/moment'));
 app.use('/static', express.static('static'));
 
 // Enable REST API to handle history items

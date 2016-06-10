@@ -30,7 +30,7 @@ require.def("sampleapp/appui/formatters/historyformatter",
         "antie/widgets/image",
         "antie/widgets/horizontallist",
         "antie/widgets/verticallist",
-        "sampleapp/utility/moment.min"
+        "utility/moment"
     ],
     function(Formatter, Label, Button, Image, HorizontalList, verticallist, Moment) {
         return Formatter.extend({
