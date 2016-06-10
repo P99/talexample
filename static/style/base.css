@@ -51,8 +51,8 @@ object {
 
 #static-loading-screen p {
     text-align: center;
-    font-size: 28px;
-    font-weight: bold;
+    font-size: 20px;
+    font-weight: lighter;
     margin: 20px 0;
     padding: 0 50px;
 }
