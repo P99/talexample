@@ -24,6 +24,7 @@
 
 html {
     height: 100%;
+    width: 100%;
 }
 
 body {
@@ -44,7 +45,7 @@ object {
 /* Loading screen */
 #static-loading-screen {
     position: absolute;
-    margin-top: 100px;
+    margin-top: 5%;
     z-index: 100;
     width: 100%;
 }
@@ -105,47 +106,7 @@ object {
     float: left;
 }
 
-/* If you target some older tv models, you will need to specify
-initial element background in the base stylesheet, not in dynamically loaded styles. */
-
-.sometv.layout540p #app {
-    width: 960px;
-    height: 540px;
-    /*background-image: url(some/image/url_540.png); */
-}
-
-.sometv.layout720p #app {
-    width: 1280px;
-    height: 720px;
-    /*background-image: url(some/image/url_720.png); */
-}
-
-.sometv.layout1080p #app {
-    width: 1920px;
-    height: 1080px;
-    /*background-image: url(some/image/url_1080.png); */
-}
-
 /* SAMPLEAPP BASE STYLES */
-
-/* Core */
-
-/* Maple needs initial element background in base stylesheet... not in dynamically loaded styles! */
-.samsung.layout540p #app {
-    width: 960px;
-    height: 540px;
-}
-
-.samsung.layout720p #app {
-    width: 1280px;
-    height: 720px;
-}
-
-.samsung.layout1080p #app {
-    width: 1920px;
-    height: 1080px;
-}
-
 
 /* Sample app specific styles */
 #title {
@@ -163,6 +124,9 @@ initial element background in the base stylesheet, not in dynamically loaded sty
     padding: 8px;
     margin: 8px auto 0 auto;
     color: #888888;
+    border-bottom-color: black;
+    border-bottom-width: 5px;
+    border-bottom-style: solid;
 }
 
 .buttonFocussed {
@@ -196,8 +160,8 @@ initial element background in the base stylesheet, not in dynamically loaded sty
     position: absolute;
     top: 0px;
     left: 0px;
-    width: 1280px;
-    height: 720px;
+    width: 100%;
+    height: 100%;
 }
 
 #playerButtons {
@@ -218,7 +182,7 @@ initial element background in the base stylesheet, not in dynamically loaded sty
 }
 
 #mainMenuList {
-    margin: 30px;
+    margin-left: 10%;
 }
 
 /* Display & Visibility Helpers */
@@ -252,8 +216,8 @@ initial element background in the base stylesheet, not in dynamically loaded sty
 }
 
 #carouselComponent > .carouselmask {
-    margin-left: auto;
-    margin-right: auto;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 #carouselComponent > .description {
@@ -262,8 +226,6 @@ initial element background in the base stylesheet, not in dynamically loaded sty
 
 .carouselwidgetstrip.horizontal > .button {
     margin: 0;
-    width: 180px;
-    padding: 10px;
 }
 
 .carouselwidgetstrip.vertical > .button {
@@ -279,6 +241,7 @@ initial element background in the base stylesheet, not in dynamically loaded sty
     width: 180px;
     overflow: hidden;
     text-overflow: ellipsis;
+    margin-top: 10px;
 }
 
 #progressBar {
@@ -296,3 +259,35 @@ initial element background in the base stylesheet, not in dynamically loaded sty
     background: #777;
     position: relative;
 }
+
+#app {
+    /*position: relative;*/
+    overflow: hidden;
+}
+
+#helloWorldLabel, #welcomeLabel {
+    display: block;
+    text-align: center;
+}
+
+.description {
+    top: 5%;
+    font-size: 20px;
+}
+
+#playerButtons {
+    width: 70%;
+    left: 15%;
+    bottom: 10px;
+}
+
+#carouselComponent > .carouselmask.horizontal {
+    height: 80%;
+    width: 80%;
+}
+
+#carouselComponent > .carouselmask.vertical {
+    height: 80%;
+    width: 60%;
+}
+
