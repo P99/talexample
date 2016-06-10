@@ -44,7 +44,7 @@ function registerHistoryHandler(app, db) {
             history.updateOne({"id": req.body.id, "user": user}, {$set: req.body}, {upsert: true}, resolve);
         } else if ((keyword == "all") && (req.method == "GET")) {
             // Read
-            history.find({"user": user}, {_id: 0, user: 0}).toArray(function(err, docs) {
+            history.find({"user": user}, {_id: 0, user: 0}).sort({"date": -1}).toArray(function(err, docs) {
                 if (!err) {
                     res.send({"status": "success",
                         "totalCount": docs.length,

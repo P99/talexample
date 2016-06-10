@@ -83,8 +83,18 @@ require.def("sampleapp/appui/components/simple",
                 });
 
                 this.addEventListener("beforeshow", function (evt) {
-                    var widget = carousel.getActiveChildWidget();
-                    widget.update();
+                    if ((carousel._currentArgs.carouselId == "history") && (!evt.args)) {
+                        // If we are back from playing a video
+                        // and it was launched from the history menu
+                        // then the history have been updated (date, elapsed)
+                        // Reloading the full list works since items are sorted
+                        // last modified items is always on top
+                        // and it looks like the focus has not moved
+                        carousel.show("sampleapp/appui/components/carouselcomponent", self._getHistoryCarouselConfig());
+                    } else {
+                        var widget = carousel.getActiveChildWidget();
+                        widget.update();
+                    }
                 });
             },
 
@@ -101,7 +111,7 @@ require.def("sampleapp/appui/components/simple",
                     dataSource: new DataSource(null, new VideoFeed(), 'loadData'),
                     formatter: new VideoFormatter(),
                     orientation: Carousel.orientations.HORIZONTAL,
-                    carouselId: 'verticalCullingCarousel',
+                    carouselId: 'videos',
                     animOptions: {
                         skipAnim: false
                     },
@@ -127,7 +137,7 @@ require.def("sampleapp/appui/components/simple",
                     dataSource: new DataSource(null, new HistoryFeed(), 'loadData'),
                     formatter: new HistoryFormatter(),
                     orientation: Carousel.orientations.VERTICAL,
-                    carouselId: 'verticalCullingCarousel',
+                    carouselId: 'history',
                     animOptions: {
                         skipAnim: true
                     },
