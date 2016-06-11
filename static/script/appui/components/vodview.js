@@ -102,10 +102,11 @@ require.def("sampleapp/appui/components/vodview", [
                     if ((carousel._currentArgs.carouselId == "videos") && (evt.item)) {
                         if (evt.item._dataItem) {
                             if (evt.item._dataItem.date) {
-                                // This case aply when we go back from the player
+                                // This case apply when we go back from the player
                                 evt.item.setBookmark();
                             } else {
                                 // Retreive history after one second
+                                clearTimeout(this._timer);
                                 this._timer = setTimeout(function(widget) {
                                     device.loadURL("api/history/" + widget._dataItem.id, {
                                         onLoad: function(response) {
