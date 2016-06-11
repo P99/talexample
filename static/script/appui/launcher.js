@@ -22,18 +22,17 @@
  * Please contact us for an alternative licence
  */
 
-require.def('sampleapp/appui/launcher',
-    [
+require.def('sampleapp/appui/launcher', [
         'antie/application',
         'antie/widgets/container'
     ],
     function(Application, Container) {
-    
+
         return Application.extend({
             init: function(appDiv, styleDir, imgDir, callback) {
                 var self;
                 self = this;
-                
+
                 self._super(appDiv, styleDir, imgDir, callback);
 
                 // Sets the root widget of the application to be
@@ -44,7 +43,7 @@ require.def('sampleapp/appui/launcher',
                     self.setRootWidget(container);
                 };
             },
-            
+
             run: function() {
                 // Called from run() as we need the framework to be ready beforehand.
                 this._setRootContainer();

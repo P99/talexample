@@ -22,17 +22,15 @@
  * Please contact us for an alternative licence
  */
 
-require.def('sampleapp/appui/layouts/720p',
-    {
-        classes: [
-            "layout720p"
-        ],
-        css: [
-            "layouts/720p.css"
-        ],
-        requiredScreenSize: {
-            width: 1280,
-            height: 720
-        }
+require.def('sampleapp/appui/layouts/720p', {
+    classes: [
+        "layout720p"
+    ],
+    css: [
+        "layouts/720p.css"
+    ],
+    requiredScreenSize: {
+        width: 1280,
+        height: 720
     }
-);
+});

@@ -5,8 +5,8 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         jsbeautifier: {
             files: [
-                "static/script/appui/datasources/videofeed.js",
-                "static/script/appui/formatters/videoformatter.js",
+                "static/script/appui/**",
+                "restapi/history.js",
                 "Gruntfile.js"
             ],
         }

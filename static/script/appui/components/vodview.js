@@ -22,8 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def("sampleapp/appui/components/vodview",
-    [
+require.def("sampleapp/appui/components/vodview", [
         "antie/widgets/component",
         "antie/widgets/button",
         "antie/widgets/label",
@@ -37,11 +36,11 @@ require.def("sampleapp/appui/components/vodview",
         "sampleapp/appui/datasources/historyfeed",
         "antie/widgets/componentcontainer"
     ],
-    function (Component, Button, Label, HorizontalList, VerticalList, Carousel, DataSource, VideoFormatter, VideoFeed, HistoryFormatter, HistoryFeed, ComponentContainer) {
+    function(Component, Button, Label, HorizontalList, VerticalList, Carousel, DataSource, VideoFormatter, VideoFeed, HistoryFormatter, HistoryFeed, ComponentContainer) {
 
         // All components extend Component
         return Component.extend({
-            init: function () {
+            init: function() {
                 var self, layout, menu, carousel;
 
                 self = this;
@@ -53,7 +52,7 @@ require.def("sampleapp/appui/components/vodview",
                 menu = new HorizontalList("mainMenuList");
                 carousel = new ComponentContainer("carousel");
 
-                var videoButton = this._createVideoCarouselButton(function () {
+                var videoButton = this._createVideoCarouselButton(function() {
                     carousel.show("sampleapp/appui/components/carouselcomponent", self._getVideoCarouselConfig());
 
                 });
@@ -70,7 +69,7 @@ require.def("sampleapp/appui/components/vodview",
 
                 // Add a 'beforerender' event listener to the component to do anything specific that might need to be done
                 // before rendering the component
-                this.addEventListener("beforerender", function (evt) {
+                this.addEventListener("beforerender", function(evt) {
                     self._onBeforeRender(evt);
                 });
 
@@ -82,7 +81,7 @@ require.def("sampleapp/appui/components/vodview",
                     carousel.show("sampleapp/appui/components/carouselcomponent", self._getVideoCarouselConfig());
                 });
 
-                this.addEventListener("beforeshow", function (evt) {
+                this.addEventListener("beforeshow", function(evt) {
                     if ((carousel._currentArgs.carouselId == "history") && (!evt.args)) {
                         // If we are back from playing a video
                         // and it was launched from the history menu
@@ -98,14 +97,14 @@ require.def("sampleapp/appui/components/vodview",
                 });
             },
 
-            _createVideoCarouselButton: function (selectCallback) {
+            _createVideoCarouselButton: function(selectCallback) {
                 var button = new Button('videoButton');
                 button.appendChildWidget(new Label("Videos"));
                 button.addEventListener('select', selectCallback);
                 return button;
             },
 
-            _getVideoCarouselConfig: function () {
+            _getVideoCarouselConfig: function() {
                 return {
                     description: "",
                     dataSource: new DataSource(null, new VideoFeed(), 'loadData'),
@@ -124,14 +123,14 @@ require.def("sampleapp/appui/components/vodview",
                 };
             },
 
-            _createHistoryCarouselButton: function (selectCallback) {
+            _createHistoryCarouselButton: function(selectCallback) {
                 var button = new Button('historyButton');
                 button.appendChildWidget(new Label("History"));
                 button.addEventListener('select', selectCallback);
                 return button;
             },
 
-            _getHistoryCarouselConfig: function () {
+            _getHistoryCarouselConfig: function() {
                 return {
                     description: "",
                     dataSource: new DataSource(null, new HistoryFeed(), 'loadData'),
@@ -152,7 +151,7 @@ require.def("sampleapp/appui/components/vodview",
 
             // Appending widgets on beforerender ensures they're still displayed
             // if the component is hidden and subsequently reinstated.
-            _onBeforeRender: function () {
+            _onBeforeRender: function() {
 
             }
         });

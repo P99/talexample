@@ -291,3 +291,8 @@ object {
     width: 60%;
 }
 
+#info {
+    margin-top: 30px;
+    text-align: center;
+}
+

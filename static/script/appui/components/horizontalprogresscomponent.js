@@ -22,18 +22,17 @@
  * Please contact us for an alternative licence
  */
 
-require.def("sampleapp/appui/components/horizontalprogresscomponent",
-    [
+require.def("sampleapp/appui/components/horizontalprogresscomponent", [
         "antie/widgets/component",
         "antie/widgets/horizontalprogress",
         "antie/widgets/label",
         "antie/widgets/button"
     ],
-    function (Component, HorizontalProgress, Label, Button) {
+    function(Component, HorizontalProgress, Label, Button) {
 
         // All components extend Component
         return Component.extend({
-            init: function () {
+            init: function() {
 
                 this._super("horizontalprogresscomponent");
 
@@ -47,11 +46,11 @@ require.def("sampleapp/appui/components/horizontalprogresscomponent",
 
                 var self = this;
 
-                this.addEventListener("aftershow", function (evt) {
+                this.addEventListener("aftershow", function(evt) {
                     self._onAfterShow(evt);
                 });
 
-                this.addEventListener("beforehide", function (evt) {
+                this.addEventListener("beforehide", function(evt) {
                     self._onBeforeHide(evt);
                 });
 
@@ -60,10 +59,10 @@ require.def("sampleapp/appui/components/horizontalprogresscomponent",
                 });
             },
 
-            _onAfterShow: function () {
+            _onAfterShow: function() {
                 this._progress.setValue(0.0);
                 var self = this;
-                this._intervalID = setInterval( function() {
+                this._intervalID = setInterval(function() {
                     var value = self._progress.getValue() + 0.1;
                     if (value > 1.0) {
                         value = 1.0;
@@ -72,7 +71,7 @@ require.def("sampleapp/appui/components/horizontalprogresscomponent",
                 }, 1000);
             },
 
-            _onBeforeHide: function () {
+            _onBeforeHide: function() {
                 clearInterval(this._intervalID);
             }
 

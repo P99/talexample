@@ -22,8 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def("sampleapp/appui/components/player",
-    [
+require.def("sampleapp/appui/components/player", [
         "antie/widgets/component",
         "antie/widgets/button",
         "antie/widgets/label",
@@ -34,11 +33,11 @@ require.def("sampleapp/appui/components/player",
         "antie/runtimecontext",
         "antie/storageprovider"
     ],
-    function (Component, Button, Label, HorizontalList, VideoSource, Media, HorizontalProgress, RuntimeContext, StorageProvider) {
+    function(Component, Button, Label, HorizontalList, VideoSource, Media, HorizontalProgress, RuntimeContext, StorageProvider) {
 
         // All components extend Component
         return Component.extend({
-            init: function () {
+            init: function() {
                 var self = this;
 
                 // It is important to call the constructor of the superclass
@@ -75,22 +74,22 @@ require.def("sampleapp/appui/components/player",
                     self.getPlayer().pause();
                 });
 
-		var rewind = new Button('rewind');
+                var rewind = new Button('rewind');
                 //rewind.appendChildWidget(new Label('-5s'));
                 rewind.addClass("fa fa-backward");
                 playerControlButtons.appendChildWidget(rewind);
                 rewind.addEventListener('select', function(evt) {
-		  var currentTime = self.getPlayer().getCurrentTime();
-                  self.getPlayer().setCurrentTime(currentTime - 5);
+                    var currentTime = self.getPlayer().getCurrentTime();
+                    self.getPlayer().setCurrentTime(currentTime - 5);
                 });
 
-	        var fastForward = new Button('fastForward');
+                var fastForward = new Button('fastForward');
                 //fastForward.appendChildWidget(new Label('+5s'));
                 fastForward.addClass("fa fa-forward");
-		  playerControlButtons.appendChildWidget(fastForward);
-		  fastForward.addEventListener('select', function(evt) {
-		    var currentTime = self.getPlayer().getCurrentTime();
-		    self.getPlayer().setCurrentTime(currentTime + 5);
+                playerControlButtons.appendChildWidget(fastForward);
+                fastForward.addEventListener('select', function(evt) {
+                    var currentTime = self.getPlayer().getCurrentTime();
+                    self.getPlayer().setCurrentTime(currentTime + 5);
                 });
 
                 var back = new Button('back');
@@ -111,7 +110,7 @@ require.def("sampleapp/appui/components/player",
                 this.appendChildWidget(playerControlButtons);
 
                 // Add a 'beforerender' event listener to the component that takes care of video instantiation
-                this.addEventListener("beforerender", function (evt) {
+                this.addEventListener("beforerender", function(evt) {
                     self._onBeforeRender(evt);
                 });
 
@@ -119,7 +118,7 @@ require.def("sampleapp/appui/components/player",
                 this._setUserId();
             },
 
-            _onBeforeRender: function (evt) {
+            _onBeforeRender: function(evt) {
                 // Create a video player
                 var videoType = "video/mp4";
                 this._dataItem = evt.args;
@@ -129,10 +128,10 @@ require.def("sampleapp/appui/components/player",
                 player.setSources([new VideoSource(evt.args.url, videoType)]);
                 player.load();
             },
-            getPlayer : function() {
+            getPlayer: function() {
                 return this._player;
             },
-            destroyPlayer : function() {
+            destroyPlayer: function() {
                 // Updated history with elapsed time
                 this._dataItem.elapsed = this._player.outputElement.currentTime;
                 this._updateHistory();
@@ -181,35 +180,39 @@ require.def("sampleapp/appui/components/player",
                 // Return a reference to the player object so we can set and load the media source
                 return this._player;
             },
-            hideBackground : function() {
+            hideBackground: function() {
                 this._device.addClassToElement(document.body, 'background-none');
                 this._application.getRootWidget().addClass('background-none');
             },
-            showBackground : function() {
+            showBackground: function() {
                 if (this._device.getPlayerEmbedMode() === Media.EMBED_MODE_BACKGROUND) {
                     this._device.removeClassFromElement(document.body, 'background-none');
                     this._application.getRootWidget().removeClass('background-none');
                 }
             },
-            _saveHistory: function () {
+            _saveHistory: function() {
                 var device = RuntimeContext.getDevice();
                 this._dataItem.date = new Date().getTime();
                 device.loadURL("api/history/new", {
                     'method': "PUT",
-                    'headers': {'Content-Type': "application/json;charset=UTF-8"},
+                    'headers': {
+                        'Content-Type': "application/json;charset=UTF-8"
+                    },
                     'data': JSON.stringify(this._dataItem)
                 });
             },
-            _updateHistory: function () {
+            _updateHistory: function() {
                 var device = RuntimeContext.getDevice();
                 this._dataItem.date = new Date().getTime();
                 device.loadURL("api/history/" + this._dataItem.id, {
                     'method': "POST",
-                    'headers': {'Content-Type': "application/json;charset=UTF-8"},
+                    'headers': {
+                        'Content-Type': "application/json;charset=UTF-8"
+                    },
                     'data': JSON.stringify(this._dataItem)
                 });
             },
-            _setUserId: function () {
+            _setUserId: function() {
                 var device, storage, userId;
                 var device = RuntimeContext.getDevice();
                 storage = device.getStorage(StorageProvider.STORAGE_TYPE_PERSISTENT, "accedo");

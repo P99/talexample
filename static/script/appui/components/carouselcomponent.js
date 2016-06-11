@@ -22,8 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def("sampleapp/appui/components/carouselcomponent",
-    [
+require.def("sampleapp/appui/components/carouselcomponent", [
         "antie/widgets/component",
         "antie/datasource",
         "antie/widgets/label",
@@ -35,7 +34,7 @@ require.def("sampleapp/appui/components/carouselcomponent",
         "antie/widgets/carousel/strips/cullingstrip",
         "antie/widgets/carousel/strips/hidingstrip"
     ],
-    function (
+    function(
         Component,
         DataSource,
         Label,
@@ -46,18 +45,18 @@ require.def("sampleapp/appui/components/carouselcomponent",
         WrappingNavigator,
         CullingStrip,
         HidingStrip
-        ) {
+    ) {
         'use strict';
 
         function evtBind(self, functionName) {
-            return function (evt) {
+            return function(evt) {
                 self[functionName].call(self, evt);
             };
         }
 
         var CarouselComponent;
         CarouselComponent = Component.extend({
-            init: function () {
+            init: function() {
                 this._super('carouselComponent');
                 this._addComponentListeners();
                 this._description = new Label();
@@ -65,7 +64,7 @@ require.def("sampleapp/appui/components/carouselcomponent",
                 this.appendChildWidget(this._description);
             },
 
-            onBeforeShow: function (evt) {
+            onBeforeShow: function(evt) {
                 this._initialItem = evt.args.initialItem || 0;
                 this._dontShowYet(evt);
                 this.setDescription(evt.args.description || "");
@@ -78,7 +77,7 @@ require.def("sampleapp/appui/components/carouselcomponent",
                 this._justInitialized = false;
             },
 
-            onAfterHide: function (evt) {
+            onAfterHide: function(evt) {
                 this._tearDownCarousel();
                 this.removeChildWidget(this._carousel);
                 this._carousel = null;
@@ -96,11 +95,11 @@ require.def("sampleapp/appui/components/carouselcomponent",
                 }
             },
 
-            onSelect: function (evt) {
+            onSelect: function(evt) {
                 this._playVideo(evt);
             },
 
-            onDataBound: function (evt) {
+            onDataBound: function(evt) {
                 // In practice you might set widget lengths from data source rather then component args
                 // and do it during a bind per widget (on append), however if you're doing it in a block
                 // this is where it needs to happen (post bind, pre align)
@@ -114,11 +113,11 @@ require.def("sampleapp/appui/components/carouselcomponent",
                 this.show({});
             },
 
-            setDescription: function (titleText) {
+            setDescription: function(titleText) {
                 this._description.setText(titleText);
             },
 
-            _addComponentListeners: function () {
+            _addComponentListeners: function() {
                 var componentEventListenerMap;
                 componentEventListenerMap = {
                     'beforeshow': evtBind(this, 'onBeforeShow'),
@@ -128,55 +127,55 @@ require.def("sampleapp/appui/components/carouselcomponent",
                 this._addListenersTo(this, componentEventListenerMap);
             },
 
-            _dontShowYet: function (showEvt) {
+            _dontShowYet: function(showEvt) {
                 showEvt.preventDefault();
             },
 
-            _createCarousel: function (args) {
+            _createCarousel: function(args) {
                 this._carousel = new Carousel(args.carouselId, args.orientation);
                 this._setCarouselNavigatorAndWidgetStrip(args);
 
                 this._attachCarouselHandler(args.animOptions);
             },
 
-            _setCarouselNavigatorAndWidgetStrip: function (args) {
+            _setCarouselNavigatorAndWidgetStrip: function(args) {
                 switch (args.type) {
-                case "WRAPPING":
-                    this._carousel.setWidgetStrip(WrappingStrip);
-                    this._carousel.setNavigator(WrappingNavigator);
-                    break;
-                case "CULLING":
-                    this._carousel.setWidgetStrip(CullingStrip);
-                    break;
-                case "HIDING":
-                    this._carousel.setWidgetStrip(HidingStrip);
-                    break;
+                    case "WRAPPING":
+                        this._carousel.setWidgetStrip(WrappingStrip);
+                        this._carousel.setNavigator(WrappingNavigator);
+                        break;
+                    case "CULLING":
+                        this._carousel.setWidgetStrip(CullingStrip);
+                        break;
+                    case "HIDING":
+                        this._carousel.setWidgetStrip(HidingStrip);
+                        break;
                 }
             },
 
-            _attachCarouselHandler: function (animOptions) {
+            _attachCarouselHandler: function(animOptions) {
                 var handler;
                 handler = new ActivateFirstHandler();
                 handler.setAnimationOptions(animOptions);
                 handler.attach(this._carousel);
             },
 
-            _addCarouselListeners: function () {
+            _addCarouselListeners: function() {
                 this._addListenersTo(this._carousel, this._getCarouselListenerMap());
             },
 
-            _getCarouselListenerMap: function () {
+            _getCarouselListenerMap: function() {
                 this._carouselListenerMap = this._carouselListenerMap || {
                     'databound': evtBind(this, 'onDataBound')
                 };
                 return this._carouselListenerMap;
             },
 
-            _addListenersTo: function (target, listenerMap) {
+            _addListenersTo: function(target, listenerMap) {
                 this._modifyListenersOn(target, listenerMap, true);
             },
 
-            _modifyListenersOn: function (target, listenerMap, add) {
+            _modifyListenersOn: function(target, listenerMap, add) {
                 var eventName, modifyFunction;
                 modifyFunction = add ? target.addEventListener : target.removeEventListener;
                 for (eventName in listenerMap) {
@@ -186,7 +185,7 @@ require.def("sampleapp/appui/components/carouselcomponent",
                 }
             },
 
-            _setCarouselAlignPoints: function (evt) {
+            _setCarouselAlignPoints: function(evt) {
                 if (evt.args && evt.args.alignment) {
                     var alignPoint = evt.args.alignment.alignPoint;
                     var normalisedAlignPoint = evt.args.alignment.normalisedAlignPoint;
@@ -203,11 +202,11 @@ require.def("sampleapp/appui/components/carouselcomponent",
                 }
             },
 
-            _saveCarouselLengths: function (evt) {
+            _saveCarouselLengths: function(evt) {
                 this._lengths = evt.args.lengths;
             },
 
-            _startCarouselDataBinding: function (evt) {
+            _startCarouselDataBinding: function(evt) {
                 var dataSource, formatter, binder;
                 // disabling auto calc is to prevent wrapping strips from
                 // creating clones multiple times during a large data bind
@@ -218,13 +217,13 @@ require.def("sampleapp/appui/components/carouselcomponent",
                 binder.appendAllTo(this._carousel);
             },
 
-            _setCarouselAlignedAndActiveItems: function (alignedIndex, activeIndex) {
+            _setCarouselAlignedAndActiveItems: function(alignedIndex, activeIndex) {
                 this._carousel.alignToIndex(alignedIndex);
                 this._carousel.setActiveChildIndex(activeIndex);
                 this._carousel.getChildWidgets()[activeIndex].focus();
             },
 
-            _playVideo: function (evt) {
+            _playVideo: function(evt) {
                 this.getCurrentApplication().pushComponent("maincontainer", "sampleapp/appui/components/player", evt.target._dataItem);
             },
 
@@ -234,13 +233,13 @@ require.def("sampleapp/appui/components/carouselcomponent",
              * as this way clears down widget listeners) then removes any listeners
              * added to the carousel.
              */
-            _tearDownCarousel: function () {
+            _tearDownCarousel: function() {
                 this._carousel.completeAlignment();
                 this._removeCarouselItems();
                 this._removeCarouselListeners();
             },
 
-            _removeCarouselItems: function () {
+            _removeCarouselItems: function() {
                 var items;
                 while (this._carousel.getChildWidgetCount() > 0) {
                     items = this._carousel.getChildWidgets();
@@ -248,11 +247,11 @@ require.def("sampleapp/appui/components/carouselcomponent",
                 }
             },
 
-            _removeCarouselListeners: function () {
+            _removeCarouselListeners: function() {
                 this._removeListenersFrom(this._carousel, this._getCarouselListenerMap());
             },
 
-            _removeListenersFrom: function (target, listenerMap) {
+            _removeListenersFrom: function(target, listenerMap) {
                 this._modifyListenersOn(target, listenerMap, false);
             }
         });
@@ -260,4 +259,3 @@ require.def("sampleapp/appui/components/carouselcomponent",
         return CarouselComponent;
     }
 );
-

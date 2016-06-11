@@ -22,8 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def("sampleapp/appui/datasources/historyfeed",
-    [
+require.def("sampleapp/appui/datasources/historyfeed", [
         "antie/class",
         "antie/runtimecontext"
     ],
@@ -34,19 +33,18 @@ require.def("sampleapp/appui/datasources/historyfeed",
             // An array of objects is expected.
             loadData: function(callbacks) {
                 var device = RuntimeContext.getDevice();
-                device.loadURL("api/history/all",
-                {
-                        onLoad: function(response) {
-                            var payload = JSON.parse(response);
-                            if (payload && payload.totalCount > 0) {
-                                callbacks.onSuccess(payload.entries);
-                            } else {
-                               callbacks.onError("No entries...");
-                            }
-                        },
-                        onError: function(response) {
-                            callbacks.onError(response);
+                device.loadURL("api/history/all", {
+                    onLoad: function(response) {
+                        var payload = JSON.parse(response);
+                        if (payload && payload.totalCount > 0) {
+                            callbacks.onSuccess(payload.entries);
+                        } else {
+                            callbacks.onError("No entries...");
                         }
+                    },
+                    onError: function(response) {
+                        callbacks.onError(response);
+                    }
                 });
             }
         });

@@ -22,8 +22,7 @@
  * Please contact us for an alternative licence
  */
 
-require.def("sampleapp/appui/formatters/historyformatter",
-    [
+require.def("sampleapp/appui/formatters/historyformatter", [
         "antie/formatter",
         "antie/widgets/label",
         "antie/widgets/button",
@@ -34,14 +33,17 @@ require.def("sampleapp/appui/formatters/historyformatter",
     ],
     function(Formatter, Label, Button, Image, HorizontalList, verticallist, Moment) {
         return Formatter.extend({
-            format : function (iterator) {
+            format: function(iterator) {
                 var button, hlist, vlist, item;
                 item = iterator.next();
                 button = new Button("history" + item.id);
                 hlist = new HorizontalList("hbox");
                 vlist = new verticallist("vbox");
                 button.appendChildWidget(hlist);
-                hlist.appendChildWidget(new Image("img-item.id", item.thumbnail, { width : 48, height: 70}));
+                hlist.appendChildWidget(new Image("img-item.id", item.thumbnail, {
+                    width: 48,
+                    height: 70
+                }));
                 hlist.appendChildWidget(vlist);
                 vlist.appendChildWidget(new Label(Moment(item.date).calendar()));
                 vlist.appendChildWidget(new Label("(" + this._formatDuration(item.elapsed) + ")"));
@@ -50,8 +52,9 @@ require.def("sampleapp/appui/formatters/historyformatter",
                 return button;
             },
 
-            _formatDuration: function (duration) {
-                var str = "", hrs, mins, secs;
+            _formatDuration: function(duration) {
+                var str = "",
+                    hrs, mins, secs;
                 hrs = ~~(duration / 3600);
                 mins = ~~((duration % 3600) / 60);
                 secs = ~~(duration % 60);
