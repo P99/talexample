@@ -113,6 +113,10 @@ require.def("sampleapp/appui/components/carouselcomponent", [
                 this.show({});
             },
 
+            onDataBindingError: function(evt) {
+                this.parentWidget.show("sampleapp/appui/components/info", "This category is empty...");
+            },
+
             setDescription: function(titleText) {
                 this._description.setText(titleText);
             },
@@ -166,7 +170,8 @@ require.def("sampleapp/appui/components/carouselcomponent", [
 
             _getCarouselListenerMap: function() {
                 this._carouselListenerMap = this._carouselListenerMap || {
-                    'databound': evtBind(this, 'onDataBound')
+                    'databound': evtBind(this, 'onDataBound'),
+                    'databindingerror': evtBind(this, 'onDataBindingError')
                 };
                 return this._carouselListenerMap;
             },
