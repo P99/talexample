@@ -21,9 +21,24 @@ function registerHistoryHandler(app, db) {
 
         // Utility
         function resolve(err, result) {
-            res.send({
-                "status": (err ? "failure" : "success")
-            });
+            var response;
+            if (err || !result || (result === {})) {
+                response = {
+                    "status": "failure"
+                };
+            } else {
+                response = {
+                    "status": "success"
+                };
+                if (result.length) {
+                    response["totalCount"] = result.length;
+                    response["entries"] = result;
+
+                } else {
+                    response["entry"] = result;
+                }
+            }
+            res.send(response);
         }
 
         function findUser(req) {
@@ -34,84 +49,51 @@ function registerHistoryHandler(app, db) {
             return namespace.userId;
         }
 
-        var history, keyword, user;
+        var history, keyword, query, projection;
         history = db.collection('history');
         keyword = req.path.slice(13); // trim '/api/history/'
-        user = findUser(req);
+        query = {
+            "id": keyword,
+            "user": findUser(req)
+        };
+        projection = {
+            "_id": 0,
+            "user": 0
+        }
 
-
-        if ((keyword == "new") && (req.method == "PUT")) {
-            // Create
-            history.updateOne({
-                "id": req.body.id,
-                "user": user
-            }, {
-                $set: req.body
-            }, {
-                upsert: true
-            }, resolve);
-        } else if (req.method == "GET") {
-            if (keyword == "all") {
-                // Read
-                history.find({
-                    "user": user
-                }, {
-                    _id: 0,
-                    user: 0
-                }).sort({
-                    "date": -1
-                }).toArray(function(err, docs) {
-                    if (!err) {
-                        res.send({
-                            "status": "success",
-                            "totalCount": docs.length,
-                            "entries": docs
-                        });
-                    } else {
-                        res.send({
-                            "status": "failure"
-                        });
+        if (keyword) {
+            switch (req.method) {
+                case "PUT":
+                    // Create
+                    if (keyword == "new") {
+                        query.id = req.body.id;
                     }
-                });
-            } else {
-                history.findOne({
-                    "id": keyword,
-                    "user": user
-                }, {
-                    _id: 0,
-                    user: 0
-                }, function(err, doc) {
-                    if (!err && doc && (doc !== {})) {
-                        res.send({
-                            "status": "success",
-                            "entry": doc
-                        });
+                    // Fall through
+                case "POST":
+                    // Update
+                    history.updateOne(query, {
+                        $set: req.body
+                    }, {
+                        upsert: true
+                    }, resolve);
+                    break;
+                case "GET":
+                    // Read
+                    if (keyword == "all") {
+                        delete query.id;
+                        history.find(query, projection).sort({
+                            "date": -1
+                        }).toArray(resolve);
                     } else {
-                        res.send({
-                            "status": "failure"
-                        });
+                        history.findOne(query, projection, resolve);
                     }
-                });
-
+                    break;
+                case "DELETE":
+                    history.deleteOne(query, resolve);
+                    break;
             }
-        } else if (keyword && (req.method == "POST")) {
-            // Update
-            history.updateOne({
-                "id": keyword,
-                "user": user
-            }, {
-                $set: req.body
-            }, resolve);
-        } else if (keyword && (req.method == "DELETE")) {
-            // Delete
-            history.deleteOne({
-                "id": keyword,
-                "user": user
-            }, resolve);
         } else {
-            res.send({
-                "status": "failure"
-            });
+            resolve("Failure");
         }
     });
 }
