@@ -236,12 +236,12 @@ object {
     width: 100%;
 }
 
-.carouselwidgetstrip.horizontal span.widget.label {
-    float: left;
+#videoLabel {
     width: 180px;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-top: 10px;
+    padding: 10px 0 0 0;
+    margin: 0;
 }
 
 #progressBar {

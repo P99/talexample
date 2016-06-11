@@ -23,23 +23,24 @@
  */
 
 require.def("sampleapp/appui/components/vodview", [
-        "antie/widgets/component",
-        "antie/widgets/button",
-        "antie/widgets/label",
-        "antie/widgets/horizontallist",
-        "antie/widgets/verticallist",
-        "antie/widgets/carousel",
-        "antie/datasource",
-        "sampleapp/appui/formatters/videoformatter",
-        "sampleapp/appui/datasources/videofeed",
-        "sampleapp/appui/formatters/historyformatter",
-        "sampleapp/appui/datasources/historyfeed",
-        "antie/widgets/componentcontainer"
-    ],
-    function(Component, Button, Label, HorizontalList, VerticalList, Carousel, DataSource, VideoFormatter, VideoFeed, HistoryFormatter, HistoryFeed, ComponentContainer) {
+    "antie/widgets/component",
+    "antie/widgets/button",
+    "antie/widgets/label",
+    "antie/widgets/horizontallist",
+    "antie/widgets/verticallist",
+    "antie/widgets/carousel",
+    "antie/datasource",
+    "sampleapp/appui/formatters/videoformatter",
+    "sampleapp/appui/datasources/videofeed",
+    "sampleapp/appui/formatters/historyformatter",
+    "sampleapp/appui/datasources/historyfeed",
+    "antie/widgets/componentcontainer",
+    "antie/runtimecontext",
+],
+function(Component, Button, Label, HorizontalList, VerticalList, Carousel, DataSource, VideoFormatter, VideoFeed, HistoryFormatter, HistoryFeed, ComponentContainer, RuntimeContext) {
 
-        // All components extend Component
-        return Component.extend({
+    // All components extend Component
+    return Component.extend({
             init: function() {
                 var self, layout, menu, carousel;
 
@@ -95,65 +96,102 @@ require.def("sampleapp/appui/components/vodview", [
                         widget.update();
                     }
                 });
+
+                this.addEventListener("selecteditemchange", function(evt) {
+                    var device = RuntimeContext.getDevice();
+                    if ((carousel._currentArgs.carouselId == "videos") && (evt.item)) {
+                        if (evt.item._dataItem) {
+                            if (evt.item._dataItem.date) {
+                                // This case aply when we go back from the player
+                                self._setBookmarkIcon(evt.item);
+                            } else {
+                                // Retreive history after one second
+                                this._timer = setTimeout(function(widget) {
+                                    device.loadURL("api/history/" + widget._dataItem.id, {
+                                        onLoad: function(response) {
+                                            response = JSON.parse(response);
+                                            if (response.status == "success") {
+                                                widget._dataItem.date = response.entry.date;
+                                                widget._dataItem.elapsed = response.entry.elapsed;
+                                                self._setBookmarkIcon(widget);
+                                            }
+                                        }
+                                    });
+                                }, 1000, evt.item);
+                            }
+                        }
+                    }
+                });
             },
 
-            _createVideoCarouselButton: function(selectCallback) {
-                var button = new Button('videoButton');
-                button.appendChildWidget(new Label("Videos"));
-                button.addEventListener('select', selectCallback);
-                return button;
-            },
-
-            _getVideoCarouselConfig: function() {
-                return {
-                    description: "",
-                    dataSource: new DataSource(null, new VideoFeed(), 'loadData'),
-                    formatter: new VideoFormatter(),
-                    orientation: Carousel.orientations.HORIZONTAL,
-                    carouselId: 'videos',
-                    animOptions: {
-                        skipAnim: false
-                    },
-                    alignment: {
-                        normalisedAlignPoint: 0.5,
-                        normalisedWidgetAlignPoint: 0.5
-                    },
-                    type: "WRAPPING",
-                    lengths: 264
-                };
-            },
-
-            _createHistoryCarouselButton: function(selectCallback) {
-                var button = new Button('historyButton');
-                button.appendChildWidget(new Label("History"));
-                button.addEventListener('select', selectCallback);
-                return button;
-            },
-
-            _getHistoryCarouselConfig: function() {
-                return {
-                    description: "",
-                    dataSource: new DataSource(null, new HistoryFeed(), 'loadData'),
-                    formatter: new HistoryFormatter(),
-                    orientation: Carousel.orientations.VERTICAL,
-                    carouselId: 'history',
-                    animOptions: {
-                        skipAnim: true
-                    },
-                    alignment: {
-                        normalisedAlignPoint: -0.5,
-                        normalisedWidgetAlignPoint: -0.5
-                    },
-                    type: "CULLING",
-                    lengths: 264
-                };
-            },
-
-            // Appending widgets on beforerender ensures they're still displayed
-            // if the component is hidden and subsequently reinstated.
-            _onBeforeRender: function() {
-
+            _setBookmarkIcon: function(widget) {
+                if (carousel._currentArgs.carouselId == "videos") {
+                    // Looks scary but it is a fixed structure
+                    widget._childWidgetOrder[1]._childWidgetOrder[0].addClass("fa fa-bookmark fa-fw");
+                }
             }
-        });
-    }
+        },
+
+        _createVideoCarouselButton: function(selectCallback) {
+            var button = new Button('videoButton');
+            button.appendChildWidget(new Label("Videos"));
+            button.addEventListener('select', selectCallback);
+            return button;
+        },
+
+        _getVideoCarouselConfig: function() {
+            return {
+                description: "",
+                dataSource: new DataSource(null, new VideoFeed(), 'loadData'),
+                formatter: new VideoFormatter(),
+                orientation: Carousel.orientations.HORIZONTAL,
+                carouselId: 'videos',
+                animOptions: {
+                    skipAnim: false
+                },
+                alignment: {
+                    normalisedAlignPoint: 0.5,
+                    normalisedWidgetAlignPoint: 0.5
+                },
+                type: "WRAPPING",
+                lengths: 264
+            };
+        },
+
+        _createHistoryCarouselButton: function(selectCallback) {
+            var button = new Button('historyButton');
+            var icon = new Label("");
+            icon.addClass("fa fa-bookmark fa-fw");
+            button.appendChildWidget(icon);
+            button.appendChildWidget(new Label("History"));
+            button.addEventListener('select', selectCallback);
+            return button;
+        },
+
+        _getHistoryCarouselConfig: function() {
+            return {
+                description: "",
+                dataSource: new DataSource(null, new HistoryFeed(), 'loadData'),
+                formatter: new HistoryFormatter(),
+                orientation: Carousel.orientations.VERTICAL,
+                carouselId: 'history',
+                animOptions: {
+                    skipAnim: true
+                },
+                alignment: {
+                    normalisedAlignPoint: -0.5,
+                    normalisedWidgetAlignPoint: -0.5
+                },
+                type: "CULLING",
+                lengths: 264
+            };
+        },
+
+        // Appending widgets on beforerender ensures they're still displayed
+        // if the component is hidden and subsequently reinstated.
+        _onBeforeRender: function() {
+
+        }
+    });
+}
 );

@@ -50,28 +50,50 @@ function registerHistoryHandler(app, db) {
             }, {
                 upsert: true
             }, resolve);
-        } else if ((keyword == "all") && (req.method == "GET")) {
-            // Read
-            history.find({
-                "user": user
-            }, {
-                _id: 0,
-                user: 0
-            }).sort({
-                "date": -1
-            }).toArray(function(err, docs) {
-                if (!err) {
-                    res.send({
-                        "status": "success",
-                        "totalCount": docs.length,
-                        "entries": docs
-                    });
-                } else {
-                    res.send({
-                        "status": "failure"
-                    });
-                }
-            });
+        } else if (req.method == "GET") {
+            if (keyword == "all") {
+                // Read
+                history.find({
+                    "user": user
+                }, {
+                    _id: 0,
+                    user: 0
+                }).sort({
+                    "date": -1
+                }).toArray(function(err, docs) {
+                    if (!err) {
+                        res.send({
+                            "status": "success",
+                            "totalCount": docs.length,
+                            "entries": docs
+                        });
+                    } else {
+                        res.send({
+                            "status": "failure"
+                        });
+                    }
+                });
+            } else {
+                history.findOne({
+                    "id": keyword,
+                    "user": user
+                }, {
+                    _id: 0,
+                    user: 0
+                }, function(err, doc) {
+                    if (!err && doc && (doc !== {})) {
+                        res.send({
+                            "status": "success",
+                            "entry": doc
+                        });
+                    } else {
+                        res.send({
+                            "status": "failure"
+                        });
+                    }
+                });
+
+            }
         } else if (keyword && (req.method == "POST")) {
             // Update
             history.updateOne({

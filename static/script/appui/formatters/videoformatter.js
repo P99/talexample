@@ -31,14 +31,18 @@ require.def("sampleapp/appui/formatters/videoformatter", [
     function(Formatter, Button, Image, Label) {
         return Formatter.extend({
             format: function(iterator) {
-                var button, item;
+                var item, button, container, icon;
                 item = iterator.next();
                 button = new Button("video" + item.idIMDB);
                 button.appendChildWidget(new Image("img-item.id", item.urlPoster, {
                     width: 182,
                     height: 268
                 }));
-                button.appendChildWidget(new Label(item.title));
+                container = new Button("videoLabel");
+                icon = new Label("bookmark-" + item.idIMDB, ""); // Placeholder for bookmark icon
+                container.appendChildWidget(icon);
+                container.appendChildWidget(new Label(item.title));
+                button.appendChildWidget(container);
                 button.setDataItem({
                     id: item.idIMDB,
                     title: item.title,
