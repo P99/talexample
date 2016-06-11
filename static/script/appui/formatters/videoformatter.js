@@ -49,6 +49,10 @@ require.def("sampleapp/appui/formatters/videoformatter", [
                     thumbnail: item.urlPoster,
                     url: item.videoUrl
                 });
+                // Adding helper function on the fly set bookmarks
+                button.setBookmark = function() {
+                    icon.addClass("fa fa-bookmark fa-fw");
+                }
                 return button;
             }
         });
